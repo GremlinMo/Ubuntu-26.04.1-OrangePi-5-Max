@@ -45,6 +45,55 @@ the target before flashing. Full flashing instructions will accompany the image.
 The original Ubuntu installer ISO, original Arch image, development credentials,
 SSH keys, saved Wi-Fi profiles, Bluetooth bonds and personal logs are not included.
 
+## How to install — eMMC image
+
+**Read this before downloading or flashing. The current image is not yet published
+or fresh-device boot-qualified.** These are the intended steps for the released image.
+
+Recommended image writer: **[balenaEtcher](https://etcher.balena.io/)**, downloaded
+from its official site. It writes disk images and validates the write. Use the
+inner `.img.gz` (or decompressed `.img`), **not our packaging ISO**.
+
+1. Back up the target eMMC and keep a working Orange Pi 5 Max recovery SD.
+2. Download the custom release, its checksums and **all** numbered parts if split.
+   Reassemble exactly as that release instructs, then verify SHA256.
+3. Mount/extract the custom ISO and locate the flash image under `image/`.
+4. With the Pi powered off, connect the removable eMMC to your PC using a
+   compatible eMMC USB reader. A normal microSD reader is not necessarily suitable.
+5. In Etcher: **Flash from file → select the inner image → Select target → Flash**.
+   Check the target's model and capacity carefully: flashing erases that device.
+   Never select your Windows/system disk, and never flash a mounted running root.
+6. Let validation finish, safely eject, refit the eMMC with power disconnected,
+   remove the recovery SD and start the Pi. Use Ethernet for initial recovery access.
+7. Use the credentials stated in the release notes; the planned default is
+   `oem` / `orangepi`. Change the password immediately with `passwd`.
+
+If the eMMC cannot be connected to a PC, use a separately booted recovery Linux
+environment and positively identify/unmount the eMMC target first. Etcher on your
+PC cannot see the Pi's internal eMMC merely because Ethernet is connected.
+See [the complete installation guide](docs/INSTALLATION.md).
+
+## Does it support SSDs?
+
+**The storage drivers are present, but SSD operation and SSD boot are not yet
+qualified in this build.** On 17 October the installed kernel provided `nvme`
+and USB `uas` modules, but no SSD appeared in PCIe/block-device enumeration.
+
+- **NVMe SSD as additional storage:** expected to work with compatible hardware,
+  power and the correct board configuration; actual detection/read/write testing
+  is still required. Do not assume an M.2 SATA drive is interchangeable with NVMe.
+- **USB SSD:** USB storage drivers are available, but the enclosure/bridge and
+  drive combination has not been tested.
+- **Booting/root filesystem on SSD:** not currently supported by our tested
+  installation procedure. Bootloader, initramfs and boot/root configuration need
+  separate validation. The first-boot expansion helper currently handles eMMC,
+  not NVMe or USB root devices. We do not flash SPI firmware automatically.
+
+The lowest-change future route is to keep the tested eMMC boot/root and add an
+SSD for data after non-destructive detection tests. A Windows-origin SSD may
+contain valuable data or BitLocker; do not format it just because Linux cannot
+mount it. [Storage status](docs/INSTALLATION.md#ssd-storage-and-boot-status).
+
 ## Repository layout
 
 | Section | Contents |
