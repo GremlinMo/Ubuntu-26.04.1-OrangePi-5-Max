@@ -1,0 +1,266 @@
+{
+  "active": true,
+  "config_intact": true,
+  "packages": [
+    {
+      "name": "bcmdhd-sdio-dkms",
+      "held": true,
+      "tested_version": "101.10.591.52.27-6+opi5max1",
+      "installed": "101.10.591.52.27-6+opi5max1"
+    },
+    {
+      "name": "gir1.2-gst-plugins-base-1.0",
+      "held": true,
+      "tested_version": "1.28.2-1ubuntu0.1",
+      "installed": "1.28.2-1ubuntu0.1"
+    },
+    {
+      "name": "gir1.2-gstreamer-1.0",
+      "held": true,
+      "tested_version": "1.28.2-1",
+      "installed": "1.28.2-1"
+    },
+    {
+      "name": "gstreamer1.0-alsa",
+      "held": true,
+      "tested_version": "1.28.2-1ubuntu0.1",
+      "installed": "1.28.2-1ubuntu0.1"
+    },
+    {
+      "name": "gstreamer1.0-gl",
+      "held": true,
+      "tested_version": "1.28.2-1ubuntu0.1",
+      "installed": "1.28.2-1ubuntu0.1"
+    },
+    {
+      "name": "gstreamer1.0-plugins-bad",
+      "held": true,
+      "tested_version": "1.28.2-1ubuntu1.2",
+      "installed": "1.28.2-1ubuntu1.2"
+    },
+    {
+      "name": "gstreamer1.0-plugins-base",
+      "held": true,
+      "tested_version": "1.28.2-1ubuntu0.1",
+      "installed": "1.28.2-1ubuntu0.1"
+    },
+    {
+      "name": "gstreamer1.0-plugins-base-apps",
+      "held": true,
+      "tested_version": "1.28.2-1ubuntu0.1",
+      "installed": "1.28.2-1ubuntu0.1"
+    },
+    {
+      "name": "gstreamer1.0-plugins-extra",
+      "held": true,
+      "tested_version": "1.28.2-1ubuntu1.2",
+      "installed": "1.28.2-1ubuntu1.2"
+    },
+    {
+      "name": "gstreamer1.0-tools",
+      "held": true,
+      "tested_version": "1.28.2-1",
+      "installed": "1.28.2-1"
+    },
+    {
+      "name": "gstreamer1.0-x",
+      "held": true,
+      "tested_version": "1.28.2-1ubuntu0.1",
+      "installed": "1.28.2-1ubuntu0.1"
+    },
+    {
+      "name": "libegl-mesa0",
+      "held": true,
+      "tested_version": "26.0.8-1ubuntu0.3",
+      "installed": "26.0.8-1ubuntu0.3"
+    },
+    {
+      "name": "libgbm1",
+      "held": true,
+      "tested_version": "26.0.8-1ubuntu0.3",
+      "installed": "26.0.8-1ubuntu0.3"
+    },
+    {
+      "name": "libgl1-mesa-dri",
+      "held": true,
+      "tested_version": "26.0.8-1ubuntu0.3",
+      "installed": "26.0.8-1ubuntu0.3"
+    },
+    {
+      "name": "libglx-mesa0",
+      "held": true,
+      "tested_version": "26.0.8-1ubuntu0.3",
+      "installed": "26.0.8-1ubuntu0.3"
+    },
+    {
+      "name": "libgstreamer-gl1.0-0",
+      "held": true,
+      "tested_version": "1.28.2-1ubuntu0.1",
+      "installed": "1.28.2-1ubuntu0.1"
+    },
+    {
+      "name": "libgstreamer-plugins-bad1.0-0",
+      "held": true,
+      "tested_version": "1.28.2-1ubuntu1.2",
+      "installed": "1.28.2-1ubuntu1.2"
+    },
+    {
+      "name": "libgstreamer-plugins-base1.0-0",
+      "held": true,
+      "tested_version": "1.28.2-1ubuntu0.1",
+      "installed": "1.28.2-1ubuntu0.1"
+    },
+    {
+      "name": "libgstreamer-plugins-extra1.0-0",
+      "held": true,
+      "tested_version": "1.28.2-1ubuntu1.2",
+      "installed": "1.28.2-1ubuntu1.2"
+    },
+    {
+      "name": "libgstreamer1.0-0",
+      "held": true,
+      "tested_version": "1.28.2-1",
+      "installed": "1.28.2-1"
+    },
+    {
+      "name": "linux-firmware",
+      "held": true,
+      "tested_version": "20260319.git217ca6e4.1ubuntu",
+      "installed": "20260319.git217ca6e4.1ubuntu"
+    },
+    {
+      "name": "linux-firmware-broadcom-wireless",
+      "held": true,
+      "tested_version": "20260319.git217ca6e4-0ubuntu1.1",
+      "installed": "20260319.git217ca6e4-0ubuntu1.1"
+    },
+    {
+      "name": "linux-firmware-misc",
+      "held": true,
+      "tested_version": "20260319.git217ca6e4-0ubuntu2.2",
+      "installed": "20260319.git217ca6e4-0ubuntu2.2"
+    },
+    {
+      "name": "linux-firmware-realtek",
+      "held": true,
+      "tested_version": "20260319.git217ca6e4-0ubuntu1.2",
+      "installed": "20260319.git217ca6e4-0ubuntu1.2"
+    },
+    {
+      "name": "linux-generic-hwe-24.04",
+      "held": true,
+      "tested_version": "7.0.0-38.38",
+      "installed": "7.0.0-38.38"
+    },
+    {
+      "name": "linux-generic-hwe-26.04",
+      "held": true,
+      "tested_version": "7.0.0-38.38",
+      "installed": "7.0.0-38.38"
+    },
+    {
+      "name": "linux-headers-7.0.0-30",
+      "held": true,
+      "tested_version": "7.0.0-30.30",
+      "installed": "7.0.0-30.30"
+    },
+    {
+      "name": "linux-headers-7.0.0-30-generic",
+      "held": true,
+      "tested_version": "7.0.0-30.30",
+      "installed": "7.0.0-30.30"
+    },
+    {
+      "name": "linux-headers-7.0.0-38",
+      "held": true,
+      "tested_version": "7.0.0-38.38",
+      "installed": "7.0.0-38.38"
+    },
+    {
+      "name": "linux-headers-7.0.0-38-generic",
+      "held": true,
+      "tested_version": "7.0.0-38.38",
+      "installed": "7.0.0-38.38"
+    },
+    {
+      "name": "linux-headers-generic",
+      "held": true,
+      "tested_version": "7.0.0-38.38",
+      "installed": "7.0.0-38.38"
+    },
+    {
+      "name": "linux-headers-generic-hwe-26.04",
+      "held": true,
+      "tested_version": "7.0.0-38.38",
+      "installed": "7.0.0-38.38"
+    },
+    {
+      "name": "linux-image-7.0.0-30-generic",
+      "held": true,
+      "tested_version": "7.0.0-30.30",
+      "installed": "7.0.0-30.30"
+    },
+    {
+      "name": "linux-image-7.0.0-38-generic",
+      "held": true,
+      "tested_version": "7.0.0-38.38",
+      "installed": "7.0.0-38.38"
+    },
+    {
+      "name": "linux-image-generic",
+      "held": true,
+      "tested_version": "7.0.0-38.38",
+      "installed": "7.0.0-38.38"
+    },
+    {
+      "name": "linux-image-generic-hwe-26.04",
+      "held": true,
+      "tested_version": "7.0.0-38.38",
+      "installed": "7.0.0-38.38"
+    },
+    {
+      "name": "linux-main-modules-zfs-7.0.0-30-generic",
+      "held": true,
+      "tested_version": "7.0.0-30.30",
+      "installed": "7.0.0-30.30"
+    },
+    {
+      "name": "linux-main-modules-zfs-7.0.0-38-generic",
+      "held": true,
+      "tested_version": "7.0.0-38.38",
+      "installed": "7.0.0-38.38"
+    },
+    {
+      "name": "linux-modules-7.0.0-30-generic",
+      "held": true,
+      "tested_version": "7.0.0-30.30",
+      "installed": "7.0.0-30.30"
+    },
+    {
+      "name": "linux-modules-7.0.0-38-generic",
+      "held": true,
+      "tested_version": "7.0.0-38.38",
+      "installed": "7.0.0-38.38"
+    },
+    {
+      "name": "mesa-libgallium",
+      "held": true,
+      "tested_version": "26.0.8-1ubuntu0.3",
+      "installed": "26.0.8-1ubuntu0.3"
+    },
+    {
+      "name": "mesa-vulkan-drivers",
+      "held": true,
+      "tested_version": "26.0.8-1ubuntu0.3",
+      "installed": "26.0.8-1ubuntu0.3"
+    },
+    {
+      "name": "orangepi-npu-runtime",
+      "held": true,
+      "tested_version": "1.0.0",
+      "installed": "1.0.0"
+    }
+  ],
+  "security_warning": "Protected packages also defer their security updates. Review regularly.",
+  "scope": "APT package operations, not Snap refreshes, distribution upgrades, direct dpkg/forced installs or manual file writes."
+}

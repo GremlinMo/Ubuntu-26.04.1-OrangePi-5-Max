@@ -1,0 +1,15 @@
+[Unit]
+Description=Load Orange Pi 5 Max AP6611 Wi-Fi after GPIO and SDIO readiness
+After=systemd-udev-trigger.service
+Before=NetworkManager.service
+ConditionPathExists=/lib/firmware/fw_syn43711a0_sdio.bin
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/orangepi-wifi-ready
+TimeoutStartSec=65
+RemainAfterExit=yes
+# No ExecStop: vendor teardown after an unsuccessful init is not reliable.
+
+[Install]
+WantedBy=multi-user.target

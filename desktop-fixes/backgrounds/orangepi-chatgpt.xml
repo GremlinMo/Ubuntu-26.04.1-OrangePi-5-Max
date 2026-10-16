@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">
+<wallpapers>
+  <wallpaper deleted="false">
+    <name>ChatGPT Aurora — Orange Pi</name>
+    <filename>/usr/share/backgrounds/orangepi-chatgpt/chatgpt-aurora.png</filename>
+    <filename-dark>/usr/share/backgrounds/orangepi-chatgpt/chatgpt-aurora.png</filename-dark>
+    <options>zoom</options>
+    <pcolor>#071923</pcolor><scolor>#071923</scolor><shade_type>solid</shade_type>
+  </wallpaper>
+  <wallpaper deleted="false">
+    <name>ChatGPT Forge — Orange Pi</name>
+    <filename>/usr/share/backgrounds/orangepi-chatgpt/chatgpt-forge.png</filename>
+    <filename-dark>/usr/share/backgrounds/orangepi-chatgpt/chatgpt-forge.png</filename-dark>
+    <options>zoom</options>
+    <pcolor>#14171c</pcolor><scolor>#14171c</scolor><shade_type>solid</shade_type>
+  </wallpaper>
+  <wallpaper deleted="false">
+    <name>ChatGPT Night Sky — Orange Pi</name>
+    <filename>/usr/share/backgrounds/orangepi-chatgpt/chatgpt-night-sky.png</filename>
+    <filename-dark>/usr/share/backgrounds/orangepi-chatgpt/chatgpt-night-sky.png</filename-dark>
+    <options>zoom</options>
+    <pcolor>#06102b</pcolor><scolor>#06102b</scolor><shade_type>solid</shade_type>
+  </wallpaper>
+</wallpapers>

@@ -1,0 +1,13 @@
+[Unit]
+Description=Initialize unique Orange Pi remix identity and storage
+DefaultDependencies=no
+After=local-fs.target
+Before=ssh.service ssh.socket
+ConditionPathExists=!/var/lib/orangepi-remix/first-boot-complete
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/remix-first-boot
+
+[Install]
+WantedBy=multi-user.target

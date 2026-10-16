@@ -1,0 +1,24 @@
+# Binary OS releases belong in release assets, not Git history.
+*.iso
+*.img
+*.img.gz
+*.img.xz
+*.deb
+*.ko
+*.ko.zst
+__pycache__/
+*.pyc
+.env
+.env.*
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+*known_hosts*
+*authorized_keys*
+.codex/
+.codex-remote-attachments/
+work/
+tmp/
+default password login.txt
+.orangepi5-codex-temp-*

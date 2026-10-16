@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Orange Pi Accelerated Video Player
+Comment=Choose a video; prefer Rockchip hardware decoding with OpenGL display
+Exec=/usr/local/bin/orangepi-play %f
+Icon=video-x-generic
+Terminal=false
+MimeType=video/mp4;video/x-matroska;video/quicktime;video/webm;
+Categories=AudioVideo;

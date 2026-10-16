@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Orange Pi Balanced Mode
+Comment=Restore adaptive CPU/GPU clocks and show confirmation
+Exec=/usr/local/bin/orangepi-mode balanced
+Icon=preferences-system-power
+Terminal=false
+Categories=Settings;

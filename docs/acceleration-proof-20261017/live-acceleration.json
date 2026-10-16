@@ -1,0 +1,242 @@
+{
+  "gles": {
+    "renderer": "Mali-G610 MC4 (Panfrost)",
+    "version": "OpenGL ES 3.1 Mesa 26.0.8-1ubuntu0.3",
+    "width": 1920,
+    "height": 1080,
+    "shader_iterations": 32,
+    "frames": 545,
+    "seconds": 3.002046,
+    "fps": 181.543,
+    "sample_pixel": [
+      156,
+      128,
+      128,
+      255
+    ],
+    "gl_error": 0
+  },
+  "gpu": "HARDWARE GLES verified · Mali-G610 MC4 (Panfrost) · OpenGL ES 3.1 Mesa 26.0.8-1ubuntu0.3",
+  "kernel": "7.0.0-38-generic · bcmdhd 101.10.591.52.27-6+opi5max1",
+  "vulkan": "Mali-G610 MC4 · PanVK enumerated (not a Vulkan benchmark)",
+  "video": "H.264 / HEVC / AV1 · explicit V4L2 request decoders present",
+  "wifi": "Connected · 5 GHz · AP6611S / SYN43711",
+  "npu_health": {
+    "action": "doctor",
+    "version": "1.0.0",
+    "kernel": "7.0.0-38-generic",
+    "integrity_ok": true,
+    "npu_access": true,
+    "inference_executed": false
+  },
+  "npu": "NPU inference PASS · MobileNet UINT8 · 13.39 ms vs CPU 46.67 ms · 3.49× in this test",
+  "npu_run": {
+    "action": "verify",
+    "cpu": {
+      "mode": "cpu",
+      "delegate_partitions": 0,
+      "median_ms": 46.67411799982801,
+      "initialization_ms": 0.7218640002975008,
+      "warmups": 3,
+      "runs": 10,
+      "cpu_threads": 1,
+      "cpu_affinity": [
+        4
+      ],
+      "top5": [
+        {
+          "index": 156,
+          "label": "Shih-Tzu",
+          "score": 0.984375
+        },
+        {
+          "index": 155,
+          "label": "Pekinese, Pekingese, Peke",
+          "score": 0.01171875
+        },
+        {
+          "index": 205,
+          "label": "Lhasa, Lhasa apso",
+          "score": 0.00390625
+        },
+        {
+          "index": 0,
+          "label": "background",
+          "score": 0
+        },
+        {
+          "index": 1,
+          "label": "tench, Tinca tinca",
+          "score": 0
+        }
+      ],
+      "peak_sampled_temperatures_c": {
+        "bigcore2-thermal": 43.461,
+        "package-thermal": 43.461,
+        "gpu-thermal": 42.538,
+        "littlecore-thermal": 43.461,
+        "bigcore0-thermal": 43.461,
+        "npu-thermal": 42.538,
+        "center-thermal": 42.538
+      },
+      "output_sha256": "442eef9f45f132120d418484c22cc08475c37ec9f990e2a3f6e76538288c28e0",
+      "no_full_cpu_fallback": false,
+      "qualification": "MobileNet V1 UINT8 only. Delegated graph partitions may retain CPU work. Not RKNN, arbitrary-model support, all precisions, all-core scaling or a 6-TOPS claim."
+    },
+    "npu": {
+      "mode": "npu",
+      "delegate_partitions": 2,
+      "median_ms": 13.388753000072029,
+      "initialization_ms": 31.414643999596592,
+      "warmups": 3,
+      "runs": 10,
+      "cpu_threads": 1,
+      "cpu_affinity": [
+        4
+      ],
+      "top5": [
+        {
+          "index": 156,
+          "label": "Shih-Tzu",
+          "score": 0.984375
+        },
+        {
+          "index": 155,
+          "label": "Pekinese, Pekingese, Peke",
+          "score": 0.0078125
+        },
+        {
+          "index": 205,
+          "label": "Lhasa, Lhasa apso",
+          "score": 0.00390625
+        },
+        {
+          "index": 0,
+          "label": "background",
+          "score": 0
+        },
+        {
+          "index": 1,
+          "label": "tench, Tinca tinca",
+          "score": 0
+        }
+      ],
+      "peak_sampled_temperatures_c": {
+        "bigcore2-thermal": 43.461,
+        "package-thermal": 42.538,
+        "gpu-thermal": 42.538,
+        "littlecore-thermal": 43.461,
+        "bigcore0-thermal": 43.461,
+        "npu-thermal": 42.538,
+        "center-thermal": 42.538
+      },
+      "output_sha256": "0fa2832ee366deee97760ccdd48f4c5d9ce94e2f588d175ff7bcd2bd9330fe5d",
+      "no_full_cpu_fallback": true,
+      "qualification": "MobileNet V1 UINT8 only. Delegated graph partitions may retain CPU work. Not RKNN, arbitrary-model support, all precisions, all-core scaling or a 6-TOPS claim."
+    },
+    "comparison": {
+      "top1_matches": true,
+      "max_difference_lsb": 1,
+      "threshold_lsb": 2,
+      "passed": true
+    },
+    "speedup": 3.4860690909434893
+  },
+  "video_runs": [
+    {
+      "test": "h264-1080p60",
+      "decoder": "v4l2slvideo3h264dec",
+      "frames": 180,
+      "expected": 180,
+      "seconds": 0.6137,
+      "fps": 293.3,
+      "cpu_seconds": 0.6113,
+      "caps": "video/x-raw, format=(string)NV12, width=(int)1920, height=(int)1080, interlace-mode=(string)progressive, multiview-mode=(string)mono, multiview-flags=(GstVideoMultiviewFlagsSet)0:ffffffff:/right-view-first/left-flipped/left-flopped/right-flipped/right-flopped/half-aspect/mixed-mono, pixel-aspect-ratio=(fraction)1/1, framerate=(fraction)60/1",
+      "memory_type": "system-or-v4l2",
+      "hardware": true,
+      "status": "pass",
+      "error": null
+    },
+    {
+      "test": "h264-1080p60",
+      "decoder": "avdec_h264",
+      "frames": 180,
+      "expected": 180,
+      "seconds": 0.3353,
+      "fps": 536.83,
+      "cpu_seconds": 1.7502,
+      "caps": "video/x-raw, format=(string)I420, width=(int)1920, height=(int)1080, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1, chroma-site=(string)mpeg2, framerate=(fraction)60/1",
+      "memory_type": "system-or-v4l2",
+      "hardware": false,
+      "status": "pass",
+      "error": null
+    },
+    {
+      "test": "hevc-4k60",
+      "decoder": "v4l2slh265dec",
+      "frames": 120,
+      "expected": 120,
+      "seconds": 0.6343,
+      "fps": 189.17,
+      "cpu_seconds": 0.0923,
+      "caps": "video/x-raw, format=(string)NV12, width=(int)3840, height=(int)2160, interlace-mode=(string)progressive, multiview-mode=(string)mono, multiview-flags=(GstVideoMultiviewFlagsSet)0:ffffffff:/right-view-first/left-flipped/left-flopped/right-flipped/right-flopped/half-aspect/mixed-mono, pixel-aspect-ratio=(fraction)1/1, framerate=(fraction)60/1",
+      "memory_type": "dmabuf",
+      "hardware": true,
+      "status": "pass",
+      "error": null
+    },
+    {
+      "test": "hevc-4k60",
+      "decoder": "avdec_h265",
+      "frames": 120,
+      "expected": 120,
+      "seconds": 1.1126,
+      "fps": 107.86,
+      "cpu_seconds": 6.4288,
+      "caps": "video/x-raw, format=(string)I420, width=(int)3840, height=(int)2160, interlace-mode=(string)progressive, pixel-aspect-ratio=(fraction)1/1, chroma-site=(string)mpeg2, colorimetry=(string)2:0:0:0, framerate=(fraction)60/1",
+      "memory_type": "system-or-v4l2",
+      "hardware": false,
+      "status": "pass",
+      "error": null
+    },
+    {
+      "test": "av1-720p30",
+      "decoder": "v4l2slav1dec",
+      "frames": 60,
+      "expected": 60,
+      "seconds": 0.1168,
+      "fps": 513.73,
+      "cpu_seconds": 0.0418,
+      "caps": "video/x-raw, format=(string)NV12_4L4, width=(int)1280, height=(int)720, interlace-mode=(string)progressive, multiview-mode=(string)mono, multiview-flags=(GstVideoMultiviewFlagsSet)0:ffffffff:/right-view-first/left-flipped/left-flopped/right-flipped/right-flopped/half-aspect/mixed-mono, pixel-aspect-ratio=(fraction)1/1, framerate=(fraction)30/1",
+      "memory_type": "dmabuf",
+      "hardware": true,
+      "status": "pass",
+      "error": null
+    },
+    {
+      "test": "av1-720p30",
+      "decoder": "av1dec",
+      "frames": 60,
+      "expected": 60,
+      "seconds": 0.3684,
+      "fps": 162.88,
+      "cpu_seconds": 0.3701,
+      "caps": "video/x-raw, format=(string)I420, width=(int)1280, height=(int)720, interlace-mode=(string)progressive, multiview-mode=(string)mono, multiview-flags=(GstVideoMultiviewFlagsSet)0:ffffffff:/right-view-first/left-flipped/left-flopped/right-flipped/right-flopped/half-aspect/mixed-mono, pixel-aspect-ratio=(fraction)1/1, framerate=(fraction)30/1",
+      "memory_type": "system-or-v4l2",
+      "hardware": false,
+      "status": "pass",
+      "error": null
+    }
+  ],
+  "cpu_runs": [
+    {
+      "threads": 1,
+      "events_per_second": 947.28
+    },
+    {
+      "threads": 8,
+      "events_per_second": 5178.59
+    }
+  ],
+  "timestamp": "2026-10-17T01:33:28+08:00"
+}

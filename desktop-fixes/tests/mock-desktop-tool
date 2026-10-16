@@ -1,0 +1,11 @@
+#!/usr/bin/python3
+import json, os, pathlib, sys
+name = pathlib.Path(sys.argv[0]).name
+with open(os.environ['MOCK_DESKTOP_LOG'], 'a') as log:
+    log.write(json.dumps({'tool': name, 'args': sys.argv[1:]})+'\n')
+if name == 'zenity' and '--file-selection' in sys.argv:
+    print('/home/oem/test clip.h264')
+if name == 'pkexec':
+    raise SystemExit(int(os.environ.get('MOCK_PKEXEC_STATUS', '0')))
+if name == 'gst-play-1.0':
+    raise SystemExit(int(os.environ.get('MOCK_PLAYER_STATUS', '0')))

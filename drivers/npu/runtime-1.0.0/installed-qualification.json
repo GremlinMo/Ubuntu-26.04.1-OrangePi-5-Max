@@ -1,0 +1,190 @@
+{
+  "doctor": {
+    "action": "doctor",
+    "version": "1.0.0",
+    "kernel": "7.0.0-38-generic",
+    "integrity_ok": true,
+    "npu_access": true,
+    "inference_executed": false
+  },
+  "hardware_proof": {
+    "successful_rocket_submits": 12,
+    "failed_or_unparsed_submits": 0,
+    "rocket_loaded_log": true,
+    "raw_trace_saved": false
+  },
+  "verification": {
+    "action": "verify",
+    "cpu": {
+      "mode": "cpu",
+      "delegate_partitions": 0,
+      "median_ms": 46.38085300007333,
+      "initialization_ms": 0.7061139999677835,
+      "warmups": 3,
+      "runs": 20,
+      "cpu_threads": 1,
+      "cpu_affinity": [
+        4
+      ],
+      "top5": [
+        {
+          "index": 156,
+          "label": "Shih-Tzu",
+          "score": 0.984375
+        },
+        {
+          "index": 155,
+          "label": "Pekinese, Pekingese, Peke",
+          "score": 0.01171875
+        },
+        {
+          "index": 205,
+          "label": "Lhasa, Lhasa apso",
+          "score": 0.00390625
+        },
+        {
+          "index": 0,
+          "label": "background",
+          "score": 0.0
+        },
+        {
+          "index": 1,
+          "label": "tench, Tinca tinca",
+          "score": 0.0
+        }
+      ],
+      "peak_sampled_temperatures_c": {
+        "bigcore2-thermal": 44.384,
+        "package-thermal": 44.384,
+        "gpu-thermal": 43.461,
+        "littlecore-thermal": 44.384,
+        "bigcore0-thermal": 44.384,
+        "npu-thermal": 43.461,
+        "center-thermal": 43.461
+      },
+      "output_sha256": "442eef9f45f132120d418484c22cc08475c37ec9f990e2a3f6e76538288c28e0",
+      "no_full_cpu_fallback": false,
+      "qualification": "MobileNet V1 UINT8 only. Delegated graph partitions may retain CPU work. Not RKNN, arbitrary-model support, all precisions, all-core scaling or a 6-TOPS claim."
+    },
+    "npu": {
+      "mode": "npu",
+      "delegate_partitions": 2,
+      "median_ms": 12.836345500090829,
+      "initialization_ms": 31.01477599966529,
+      "warmups": 3,
+      "runs": 20,
+      "cpu_threads": 1,
+      "cpu_affinity": [
+        4
+      ],
+      "top5": [
+        {
+          "index": 156,
+          "label": "Shih-Tzu",
+          "score": 0.984375
+        },
+        {
+          "index": 155,
+          "label": "Pekinese, Pekingese, Peke",
+          "score": 0.0078125
+        },
+        {
+          "index": 205,
+          "label": "Lhasa, Lhasa apso",
+          "score": 0.00390625
+        },
+        {
+          "index": 0,
+          "label": "background",
+          "score": 0.0
+        },
+        {
+          "index": 1,
+          "label": "tench, Tinca tinca",
+          "score": 0.0
+        }
+      ],
+      "peak_sampled_temperatures_c": {
+        "bigcore2-thermal": 44.384,
+        "package-thermal": 44.384,
+        "gpu-thermal": 43.461,
+        "littlecore-thermal": 44.384,
+        "bigcore0-thermal": 44.384,
+        "npu-thermal": 43.461,
+        "center-thermal": 43.461
+      },
+      "output_sha256": "0fa2832ee366deee97760ccdd48f4c5d9ce94e2f588d175ff7bcd2bd9330fe5d",
+      "no_full_cpu_fallback": true,
+      "qualification": "MobileNet V1 UINT8 only. Delegated graph partitions may retain CPU work. Not RKNN, arbitrary-model support, all precisions, all-core scaling or a 6-TOPS claim."
+    },
+    "comparison": {
+      "top1_matches": true,
+      "max_difference_lsb": 1,
+      "threshold_lsb": 2,
+      "passed": true
+    },
+    "speedup": 3.613244361469169
+  },
+  "classification": {
+    "mode": "npu",
+    "delegate_partitions": 2,
+    "median_ms": 12.206646999857185,
+    "initialization_ms": 30.257036999955744,
+    "warmups": 3,
+    "runs": 1,
+    "cpu_threads": 1,
+    "cpu_affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "top5": [
+      {
+        "index": 156,
+        "label": "Shih-Tzu",
+        "score": 0.984375
+      },
+      {
+        "index": 155,
+        "label": "Pekinese, Pekingese, Peke",
+        "score": 0.0078125
+      },
+      {
+        "index": 205,
+        "label": "Lhasa, Lhasa apso",
+        "score": 0.00390625
+      },
+      {
+        "index": 0,
+        "label": "background",
+        "score": 0.0
+      },
+      {
+        "index": 1,
+        "label": "tench, Tinca tinca",
+        "score": 0.0
+      }
+    ],
+    "peak_sampled_temperatures_c": {
+      "bigcore2-thermal": 45.307,
+      "package-thermal": 44.384,
+      "gpu-thermal": 43.461,
+      "littlecore-thermal": 45.307,
+      "bigcore0-thermal": 45.307,
+      "npu-thermal": 43.461,
+      "center-thermal": 44.384
+    },
+    "output_sha256": "0fa2832ee366deee97760ccdd48f4c5d9ce94e2f588d175ff7bcd2bd9330fe5d",
+    "no_full_cpu_fallback": true,
+    "qualification": "MobileNet V1 UINT8 only. Delegated graph partitions may retain CPU work. Not RKNN, arbitrary-model support, all precisions, all-core scaling or a 6-TOPS claim."
+  },
+  "missing_image_rejected": true,
+  "system_uid": 1000,
+  "kernel": "7.0.0-38-generic",
+  "note": "No clock, voltage, boot, permission or system-library changes made by qualification."
+}

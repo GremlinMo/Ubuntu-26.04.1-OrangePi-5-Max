@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Orange Pi Performance Mode
+Comment=Use stock performance clocks and show confirmation
+Exec=/usr/local/bin/orangepi-mode performance
+Icon=preferences-system-performance
+Terminal=false
+Categories=Settings;

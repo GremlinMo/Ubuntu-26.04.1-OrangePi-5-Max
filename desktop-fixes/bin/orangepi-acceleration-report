@@ -1,0 +1,314 @@
+#!/usr/bin/python3
+"""Local, non-root hardware evidence window. No addresses or SSIDs are exported."""
+import datetime
+import html
+import json
+import os
+import pathlib
+import re
+import subprocess
+import sys
+import threading
+import gi
+
+gi.require_version('Gtk', '4.0')
+gi.require_version('Gsk', '4.0')
+gi.require_version('Graphene', '1.0')
+from gi.repository import Gtk, Gdk, Gsk, GLib, Graphene
+
+DATA = pathlib.Path('/usr/share/orangepi-remix/report')
+
+
+def run(args, timeout=15, extra_env=None):
+    env = os.environ.copy()
+    if extra_env:
+        env.update(extra_env)
+    result = subprocess.run(args, text=True, capture_output=True, timeout=timeout, env=env)
+    if result.returncode:
+        raise RuntimeError((result.stderr or result.stdout or f'Exit {result.returncode}')[-450:])
+    return result.stdout.strip()
+
+
+def read(path, default='unknown'):
+    try:
+        return pathlib.Path(path).read_text().strip()
+    except OSError:
+        return default
+
+
+def temperatures():
+    rows = []
+    for path in pathlib.Path('/sys/class/thermal').glob('thermal_zone*'):
+        try:
+            rows.append((read(path/'type'), int(read(path/'temp')) / 1000))
+        except ValueError:
+            pass
+    return rows
+
+
+def cooling():
+    return [(read(p/'type'), read(p/'cur_state'))
+            for p in pathlib.Path('/sys/class/thermal').glob('cooling_device*')]
+
+
+def clock_state():
+    modes = [read(p/'scaling_governor') for p in pathlib.Path('/sys/devices/system/cpu/cpufreq').glob('policy*')]
+    gpu = read('/sys/class/devfreq/fb000000.gpu/governor')
+    return f"CPU: {', '.join(sorted(set(modes)))}  |  GPU: {gpu}"
+
+
+class Report(Gtk.Application):
+    def __init__(self):
+        super().__init__(application_id='org.orangepi.AccelerationReport')
+        self.connect('activate', self.activate)
+        self.state = {}
+        self.rows = {}
+        self.ready = False
+        self.preview = next((a.split('=', 1)[1] for a in sys.argv[1:] if a.startswith('--preview=')), None)
+        self.auto_benchmark = '--benchmark' in sys.argv
+
+    def label(self, text='', css=None):
+        widget = Gtk.Label(label=text, xalign=0)
+        widget.set_wrap(True)
+        widget.set_selectable(False)
+        if css:
+            widget.add_css_class(css)
+        return widget
+
+    def activate(self, *_):
+        if hasattr(self, 'window'):
+            self.window.present()
+            return
+        css = Gtk.CssProvider()
+        css.load_from_string('''
+            .title { font-size: 26px; font-weight: 800; }
+            .subtitle { color: #6b778c; }
+            .section { font-size: 17px; font-weight: 700; }
+            .value { font-weight: 600; }
+            .card { padding: 14px; border-radius: 12px; background: alpha(@theme_fg_color, 0.05); }
+            .thermal { font-size: 22px; font-weight: 700; color: #138d75; }
+            .warning { color: #a86613; }
+        ''')
+        Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), css, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        self.window = Gtk.ApplicationWindow(application=self, title='Orange Pi Acceleration Report')
+        self.window.set_default_size(1000, 780)
+        header = Gtk.HeaderBar()
+        self.window.set_titlebar(header)
+        self.refresh = Gtk.Button(label='Refresh evidence')
+        self.refresh.connect('clicked', lambda *_: self.start(False))
+        header.pack_start(self.refresh)
+        self.benchmark = Gtk.Button(label='Run short benchmarks')
+        self.benchmark.add_css_class('suggested-action')
+        self.benchmark.connect('clicked', lambda *_: self.start(True))
+        header.pack_end(self.benchmark)
+        export = Gtk.Button(label='Save report')
+        export.connect('clicked', self.export)
+        header.pack_end(export)
+        scroll = Gtk.ScrolledWindow()
+        self.window.set_child(scroll)
+        self.content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        for side in ('top', 'bottom', 'start', 'end'):
+            getattr(self.content, f'set_margin_{side}')(22)
+        scroll.set_child(self.content)
+        self.content.append(self.label('Orange Pi 5 Max · Acceleration evidence', 'title'))
+        self.content.append(self.label('Ubuntu 26.04.1 ARM64  /  RK3588  /  measurements, not a Raspberry Pi 5 comparison', 'subtitle'))
+        self.thermal = self.label('', 'thermal')
+        self.content.append(self.thermal)
+        self.thermal_detail = self.label('', 'subtitle')
+        self.content.append(self.thermal_detail)
+        grid = Gtk.Grid(column_spacing=20, row_spacing=10)
+        grid.add_css_class('card')
+        for i, (key, title) in enumerate([
+            ('kernel', 'Kernel / Wi-Fi driver'), ('gpu', 'GPU rendering'), ('vulkan', 'Vulkan'),
+            ('video', 'Video acceleration'), ('wifi', 'Wi-Fi'), ('npu', 'NPU'), ('clocks', 'Clock policy')]):
+            grid.attach(self.label(title), 0, i, 1, 1)
+            value = self.label('Checking…', 'value')
+            value.set_hexpand(True)
+            grid.attach(value, 1, i, 1, 1)
+            self.rows[key] = value
+        self.content.append(grid)
+        self.content.append(self.label('Benchmarks', 'section'))
+        self.results = self.label('Recorded build: Mali GLES 175.420 → 182.135 FPS (+3.8% with performance governors).\n'
+            'Native decode: H.264 1080p60 298.78 FPS · HEVC 4K60 189.43 FPS · AV1 720p30 492.08 FPS.\n'
+            'Build fixtures: all frames decoded; hardware/software pixel hashes matched. Run a new test above.', 'card')
+        self.content.append(self.results)
+        self.status = self.label('Collecting current evidence…', 'subtitle')
+        self.content.append(self.status)
+        self.content.append(self.label('Limits: smooth YouTube is not proof of hardware video decode. The supplied capture is 720p60 VP9; '
+            'this V4L2 stack has no VP9 decoder element. Browser decode, video modes, audio output, Bluetooth range, '
+            'additional NPU models/precisions and sustained thermals need separate tests.', 'warning'))
+        self.window.present()
+        GLib.timeout_add_seconds(2, self.update_thermal)
+        self.update_thermal()
+        self.start(self.auto_benchmark)
+        if self.preview:
+            GLib.timeout_add_seconds(2, self.capture_preview)
+
+    def update_thermal(self):
+        zones = temperatures()
+        peak = max((t for _, t in zones), default=0)
+        gpu = next((t for n, t in zones if n == 'gpu-thermal'), 0)
+        states = cooling()
+        throttled = any(v != '0' for n, v in states if n.startswith(('cpufreq', 'devfreq')))
+        fan = next((v for n, v in states if n == 'pwm-fan'), 'unknown')
+        session_peak = max(peak, self.state.get('observed_peak_c', 0))
+        self.thermal.set_text(f'SoC now {peak:.1f} °C   ·   GPU {gpu:.1f} °C   ·   '+('Cooling limit active' if throttled else 'No cooling limit active'))
+        self.thermal_detail.set_text(f'Session peak: {session_peak:.1f} °C · fan state {fan} (0 = idle) · fan activation 55 °C · CPU/GPU passive trip 85 °C · no fan RPM sensor.')
+        self.state['thermals'] = {n: t for n, t in zones}
+        self.state['cooling_states'] = dict(states)
+        self.state['clocks'] = clock_state()
+        self.rows['clocks'].set_text(self.state['clocks'])
+        self.state['observed_peak_c'] = session_peak
+        return True
+
+    def start(self, benchmark):
+        if self.ready is False and self.state.get('running'):
+            return
+        self.state['running'] = True
+        self.refresh.set_sensitive(False)
+        self.benchmark.set_sensitive(False)
+        self.status.set_text('Running short explicit-decoder/GPU/CPU tests…' if benchmark else 'Checking hardware renderer and installed stack…')
+        threading.Thread(target=self.collect, args=(benchmark,), daemon=True).start()
+
+    def collect(self, benchmark):
+        result = {}
+        try:
+            if max((t for _, t in temperatures()), default=100) >= 75:
+                raise RuntimeError('Board is at or above the 75 °C test guard. Let it cool before running a load test.')
+            renderer = json.loads(run(['taskset', '-c', '4', str(DATA/'gpu-offscreen-bench'), '3' if benchmark else '1'], timeout=15))
+            result['gles'] = renderer
+            gpu_kind = 'HARDWARE GLES verified' if 'Mali-G610' in renderer['renderer'] and renderer['gl_error'] == 0 else 'SOFTWARE / other renderer — investigate'
+            result['gpu'] = f"{gpu_kind} · {renderer['renderer']} · {renderer['version']}"
+            kernel = os.uname().release
+            dkms = run(['dpkg-query', '-W', '-f=${Version}', 'bcmdhd-sdio-dkms'])
+            result['kernel'] = f'{kernel} · bcmdhd {dkms}'
+            vulkan = run(['vulkaninfo', '--summary'])
+            devices = re.findall(r'deviceName\s*=\s*([^\n]+)', vulkan)
+            mali_devices = [d.strip() for d in devices if 'Mali' in d]
+            result['vulkan'] = ', '.join(mali_devices) + ' · PanVK enumerated (not a Vulkan benchmark)' if mali_devices else 'No Mali Vulkan device verified'
+            codecs = run(['gst-inspect-1.0', 'v4l2codecs'])
+            has_h264 = bool(re.search(r'\bv4l2sl(?:video\d+)?h264dec:', codecs))
+            result['video'] = 'H.264 / HEVC / AV1 · explicit V4L2 request decoders present' if has_h264 and all(n in codecs for n in ['v4l2slh265dec', 'v4l2slav1dec']) else 'A required decoder is missing'
+            try:
+                link = run(['iw', 'dev', 'wlan0', 'link'])
+                freq = re.search(r'freq:\s*(\d+)', link)
+                band = '5 GHz' if freq and 4900 <= int(freq[1]) < 5925 else ('2.4 GHz' if freq and int(freq[1]) < 3000 else 'other band')
+                result['wifi'] = f'Connected · {band} · AP6611S / SYN43711' if freq else 'Driver loaded; not connected'
+            except Exception:
+                result['wifi'] = 'Connection details unavailable (no network identifiers collected)'
+            if pathlib.Path('/usr/bin/orangepi-npu').exists():
+                health = json.loads(run(['/usr/bin/orangepi-npu', 'doctor', '--json'], timeout=30))
+                result['npu_health'] = health
+                result['npu'] = f"Rocket / Teflon runtime {health['version']} ready · select Benchmark for live inference"
+                if benchmark:
+                    npu = json.loads(run(['taskset', '-c', '4', '/usr/bin/orangepi-npu', 'verify', '--runs', '10', '--json'], timeout=130))
+                    result['npu_run'] = npu
+                    result['npu'] = (f"NPU inference PASS · MobileNet UINT8 · {npu['npu']['median_ms']:.2f} ms "
+                        f"vs CPU {npu['cpu']['median_ms']:.2f} ms · {npu['speedup']:.2f}× in this test")
+            else:
+                result['npu'] = 'Rocket device present · everyday runtime not installed' if pathlib.Path('/dev/accel/accel0').exists() else 'NPU device absent'
+            if benchmark:
+                rates = run(['/usr/bin/python3', str(DATA/'test-video-throughput.py')], timeout=90,
+                    extra_env={'ORANGEPI_FIXTURE_DIR': str(DATA/'fixtures')})
+                result['video_runs'] = [json.loads(line) for line in rates.splitlines() if line.startswith('{')]
+                if len(result['video_runs']) != 6 or any(r['status'] != 'pass' for r in result['video_runs']):
+                    raise RuntimeError('A decode frame-count test failed; see saved report.')
+                cpu_results = []
+                for threads in (1, 8):
+                    if max(t for _, t in temperatures()) >= 75:
+                        raise RuntimeError('75 °C thermal test guard reached; remaining load tests stopped.')
+                    args = ['sysbench', 'cpu', f'--threads={threads}', '--time=5', '--cpu-max-prime=20000', 'run']
+                    if threads == 1:
+                        args = ['taskset', '-c', '4'] + args
+                    output = run(args, timeout=15)
+                    eps = float(re.search(r'events per second:\s*([\d.]+)', output)[1])
+                    cpu_results.append({'threads': threads, 'events_per_second': eps})
+                result['cpu_runs'] = cpu_results
+            result['timestamp'] = datetime.datetime.now().astimezone().isoformat(timespec='seconds')
+        except Exception as error:
+            result['error'] = str(error)
+        GLib.idle_add(self.finish, result, benchmark)
+
+    def finish(self, result, benchmark):
+        self.state.update(result)
+        self.state['running'] = False
+        self.ready = True
+        for key, label in self.rows.items():
+            if key in result:
+                label.set_text(result[key])
+        if benchmark and 'video_runs' in result:
+            gpu = result['gles']
+            lines = [f"CURRENT RUN · GLES shader test: {gpu['fps']:.2f} FPS · 1920×1080 / 32 shader iterations / CPU4 affinity"]
+            for row in result['video_runs']:
+                if row['hardware']:
+                    lines.append(f"{row['test']}: {row['frames']}/{row['expected']} frames PASS · {row['fps']:.2f} FPS · {row['memory_type']}")
+            for row in result.get('cpu_runs', []):
+                lines.append(f"CPU {row['threads']} thread(s): {row['events_per_second']:.2f} events/s · primes up to 20000 / 5 seconds")
+            if 'npu_run' in result:
+                npu = result['npu_run']
+                lines.append(f"NPU MobileNet UINT8: {npu['npu']['median_ms']:.2f} ms · CPU reference {npu['cpu']['median_ms']:.2f} ms · top class matches · some CPU work may remain")
+            lines.append('Short synthetic throughput without display pacing; not a movie, browser, or Pi 5 benchmark.')
+            self.results.set_text('\n'.join(lines))
+        self.status.set_text('Test issue: '+result['error'] if 'error' in result else 'Evidence refreshed · '+result['timestamp']+' · network names, addresses and passwords omitted')
+        self.refresh.set_sensitive(True)
+        self.benchmark.set_sensitive(True)
+        self.update_thermal()
+        if self.preview:
+            print('REPORT_STATE', json.dumps(self.state), flush=True)
+        return False
+
+    def export(self, *_):
+        dialog = Gtk.FileDialog(title='Save acceleration report', initial_name='OrangePi-Acceleration-Report.html')
+        dialog.save(self.window, None, self.saved, None)
+
+    def saved(self, dialog, response, _):
+        try:
+            path = pathlib.Path(dialog.save_finish(response).get_path())
+            body = html.escape(json.dumps(self.state, indent=2))
+            path.write_text('<!doctype html><meta charset="utf-8"><title>Orange Pi acceleration evidence</title>'
+                '<style>body{font:16px system-ui;max-width:1000px;margin:36px auto}pre{white-space:pre-wrap}</style>'
+                '<h1>Orange Pi 5 Max — acceleration evidence</h1><p>Local measurements, no Raspberry Pi 5 comparison. '
+                'Explicit V4L2 decoder tests do not prove browser hardware decoding.</p><pre>'+body+'</pre>', encoding='utf-8')
+            self.status.set_text('Report saved. It omits SSIDs, IP/MAC addresses and passwords.')
+        except GLib.Error:
+            pass
+        except Exception as error:
+            self.status.set_text('Could not save report: '+str(error))
+
+    def capture_preview(self):
+        if not self.ready:
+            return True
+        width, height = self.content.get_width(), self.content.get_height()
+        if width <= 0 or height <= 0:
+            return True
+        content_snapshot = Gtk.Snapshot()
+        Gtk.Box.do_snapshot(self.content, content_snapshot)
+        content_node = content_snapshot.to_node()
+        if content_node is None:
+            return True
+        bounds = Graphene.Rect().init(0, 0, width, height)
+        snapshot = Gtk.Snapshot()
+        found, background = self.window.get_style_context().lookup_color('theme_bg_color')
+        if not found:
+            background = Gdk.RGBA()
+            background.parse('#ffffff')
+        snapshot.append_color(background, bounds)
+        snapshot.append_node(content_node)
+        node = snapshot.to_node()
+        if node is None:
+            return True
+        texture = self.window.get_renderer().render_texture(node, bounds)
+        texture.save_to_png(self.preview)
+        print('Report preview saved:', self.preview, flush=True)
+        return True
+
+
+if __name__ == '__main__':
+    app = Report()
+    if '--self-test' in sys.argv:
+        captured = []
+        GLib.idle_add = lambda callback, result, benchmark: captured.append(result)
+        app.collect(True)
+        print(json.dumps(captured[0], indent=2))
+        raise SystemExit(1 if 'error' in captured[0] else 0)
+    raise SystemExit(app.run([sys.argv[0]]))

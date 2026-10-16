@@ -1,0 +1,60 @@
+#!/bin/bash
+set -euo pipefail
+if ! tr '\0' '\n' </sys/firmware/devicetree/base/compatible |
+    grep -qx 'xunlong,orangepi-5-max'; then
+    echo 'Not an Orange Pi 5 Max; no Wi-Fi driver loaded.'
+    exit 0
+fi
+# The generic recovery entry intentionally has no vendor wireless-wlan node.
+if [[ ! -d /sys/firmware/devicetree/base/wireless-wlan ]]; then
+    echo 'Recovery DTB without AP6611 platform node; leaving Wi-Fi untouched.'
+    exit 0
+fi
+if ! module_path=$(modinfo -n bcmdhd_sdio 2>/dev/null); then
+    echo 'AP6611 DKMS driver unavailable for this kernel; leaving fallback alone.'
+    exit 0
+fi
+case "$module_path" in
+    */updates/dkms/bcmdhd_sdio.ko*) ;;
+    *) echo 'Not the tested DKMS driver; leaving vendor fallback alone.'; exit 0 ;;
+esac
+if [[ -d /sys/class/net/wlan0 ]]; then
+    echo 'Wi-Fi already initialized.'
+    exit 0
+fi
+if [[ -d /sys/module/bcmdhd_sdio ]]; then
+    echo 'Driver already loaded without wlan0; refusing unsafe automatic unload.' >&2
+    exit 1
+fi
+ready=0
+for ((attempt=0; attempt<30; attempt++)); do
+    # GPIO0 supplies WL_HOST_WAKE. The matching SDIO func1 appears only after
+    # the Rockchip MMC clock, regulator, pwrseq and pinctrl dependencies probe.
+    if [[ -L /sys/bus/platform/devices/fd8a0000.gpio/driver ]]; then
+        for card in /sys/bus/sdio/devices/*:1; do
+            [[ -r "$card/vendor" && -r "$card/device" ]] || continue
+            if [[ "$(<"$card/vendor")" == '0x06cb' &&
+                  "$(<"$card/device")" == '0xaabf' ]]; then
+                ready=1
+                break
+            fi
+        done
+    fi
+    ((ready)) && break
+    sleep 1
+done
+if ((!ready)); then
+    echo 'AP6611 SDIO/GPIO dependencies not ready; did not load vendor driver.' >&2
+    exit 1
+fi
+echo 'GPIO0 and AP6611 SDIO ready; loading Wi-Fi driver.'
+modprobe bcmdhd_sdio
+for ((attempt=0; attempt<20; attempt++)); do
+    if [[ -d /sys/class/net/wlan0 ]]; then
+        echo 'AP6611 wlan0 initialized successfully.'
+        exit 0
+    fi
+    sleep 1
+done
+echo 'Wi-Fi module returned success but wlan0 did not appear.' >&2
+exit 1

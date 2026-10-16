@@ -1,0 +1,135 @@
+{
+  "test": "Ubuntu Bluetooth 1.5-Mbaud numeric-comparison pairing",
+  "kernel": "7.0.0-38-generic",
+  "boot_id": "1e25459d-4c59-451e-92d0-45c64bc25ee1",
+  "confirmation_requests": 1,
+  "human_confirmations": 1,
+  "rejected_requests": 2,
+  "paired_observed": true,
+  "bonded_observed": true,
+  "connected_observed": true,
+  "services_resolved_observed": true,
+  "profiles_tested": true,
+  "persistent_trust_enabled": false,
+  "media_authorization_enabled": true,
+  "agent_method_counts": {
+    "RequestConfirmation": 1,
+    "AuthorizeService": 3
+  },
+  "authorized_media_service_counts": {
+    "0000110d-0000-1000-8000-00805f9b34fb": 1
+  },
+  "audio_transport_created": true,
+  "requested_service_counts": {
+    "0000111e-0000-1000-8000-00805f9b34fb": 2,
+    "0000110d-0000-1000-8000-00805f9b34fb": 1
+  },
+  "service_rejection_reasons": {
+    "service_not_enabled_for_test": 2
+  },
+  "audio_stream_active_observed": true,
+  "longest_connected_seconds": 123.0,
+  "link_metric_samples": [
+    {
+      "errors": [],
+      "classic_rssi_raw": -33,
+      "link_quality_0_255": 255,
+      "current_tx_power_dbm": 8,
+      "maximum_tx_power_dbm": 8,
+      "elapsed_seconds": 64
+    },
+    {
+      "errors": [],
+      "classic_rssi_raw": -26,
+      "link_quality_0_255": 128,
+      "current_tx_power_dbm": 8,
+      "maximum_tx_power_dbm": 8,
+      "elapsed_seconds": 75
+    },
+    {
+      "errors": [],
+      "classic_rssi_raw": -29,
+      "link_quality_0_255": 128,
+      "current_tx_power_dbm": 8,
+      "maximum_tx_power_dbm": 8,
+      "elapsed_seconds": 86
+    },
+    {
+      "errors": [],
+      "classic_rssi_raw": -31,
+      "link_quality_0_255": 255,
+      "current_tx_power_dbm": 8,
+      "maximum_tx_power_dbm": 8,
+      "elapsed_seconds": 97
+    },
+    {
+      "errors": [],
+      "classic_rssi_raw": -32,
+      "link_quality_0_255": 255,
+      "current_tx_power_dbm": 8,
+      "maximum_tx_power_dbm": 8,
+      "elapsed_seconds": 108
+    },
+    {
+      "errors": [],
+      "classic_rssi_raw": -33,
+      "link_quality_0_255": 255,
+      "current_tx_power_dbm": 8,
+      "maximum_tx_power_dbm": 8,
+      "elapsed_seconds": 119
+    },
+    {
+      "errors": [],
+      "classic_rssi_raw": -33,
+      "link_quality_0_255": 255,
+      "current_tx_power_dbm": 8,
+      "maximum_tx_power_dbm": 8,
+      "elapsed_seconds": 130
+    },
+    {
+      "errors": [],
+      "classic_rssi_raw": -34,
+      "link_quality_0_255": 255,
+      "current_tx_power_dbm": 8,
+      "maximum_tx_power_dbm": 8,
+      "elapsed_seconds": 141
+    },
+    {
+      "errors": [],
+      "classic_rssi_raw": -34,
+      "link_quality_0_255": 255,
+      "current_tx_power_dbm": 8,
+      "maximum_tx_power_dbm": 8,
+      "elapsed_seconds": 152
+    },
+    {
+      "errors": [],
+      "classic_rssi_raw": -34,
+      "link_quality_0_255": 255,
+      "current_tx_power_dbm": 8,
+      "maximum_tx_power_dbm": 8,
+      "elapsed_seconds": 163
+    },
+    {
+      "errors": [],
+      "classic_rssi_raw": -34,
+      "link_quality_0_255": 255,
+      "current_tx_power_dbm": 8,
+      "maximum_tx_power_dbm": 8,
+      "elapsed_seconds": 174
+    }
+  ],
+  "link_metric_note": "Classic HCI RSSI is reported raw, not asserted to be dBm. Transmit power is controller-reported, not measured antenna output. No RF settings are written.",
+  "original_settings_restored": true,
+  "preexisting_bonds_preserved": true,
+  "test_pairings_removed": true,
+  "finish_reason": "pairing_observed",
+  "test_devices_removed": 1,
+  "media_transport_states": [
+    "active",
+    "idle"
+  ],
+  "cleanup_failures": [],
+  "elapsed_seconds": 186,
+  "privacy": "No phone/network names, addresses, confirmation codes, keys or raw traces exported."
+}

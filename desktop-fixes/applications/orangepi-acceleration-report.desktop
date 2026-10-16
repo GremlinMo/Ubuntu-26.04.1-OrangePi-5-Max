@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Orange Pi Acceleration Report
+Comment=Verify GPU/video acceleration, benchmarks, heat and fan state
+Exec=/usr/local/bin/orangepi-acceleration-report
+Icon=utilities-system-monitor
+Terminal=false
+Categories=System;

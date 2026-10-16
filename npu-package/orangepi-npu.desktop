@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Orange Pi NPU
+Comment=Local NPU image classification and CPU comparison
+Exec=orangepi-npu-desktop
+Icon=applications-science
+Terminal=false
+Categories=Education;Science;
+Keywords=NPU;AI;Rocket;Teflon;MobileNet;

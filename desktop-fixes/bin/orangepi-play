@@ -1,0 +1,22 @@
+#!/bin/bash
+set -uo pipefail
+if test "$#" = 0; then
+    chosen=$(zenity --file-selection --title='Open an accelerated video' \
+        --file-filter='Video files | *.mp4 *.mkv *.mov *.webm *.avi *.h264 *.h265 *.ivf' \
+        --file-filter='All files | *') || exit 0
+    test -n "$chosen" || exit 0
+    set -- "$chosen"
+fi
+export GST_PLUGIN_FEATURE_RANK=v4l2slvideo1h264dec:300,v4l2slh265dec:300
+export GST_GL_PLATFORM=egl
+export GST_GL_API=gles2
+log=$(mktemp /tmp/orangepi-player.XXXXXX)
+trap 'rm -f -- "$log"' EXIT
+gst-play-1.0 --videosink=glimagesink -- "$@" > "$log" 2>&1
+code=$?
+if test "$code" != 0 && ! grep -qi 'window was closed' "$log"; then
+    zenity --error --title='Orange Pi Video Player' --width=620 \
+        --text='Playback could not start. The hardware decoder may not support this format, or the display/audio sink may be unavailable.\nDetails follow.'
+    zenity --text-info --title='Video playback details' --filename="$log" --width=850 --height=480
+fi
+exit "$code"

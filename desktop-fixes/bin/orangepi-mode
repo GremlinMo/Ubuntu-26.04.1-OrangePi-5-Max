@@ -1,0 +1,16 @@
+#!/bin/bash
+set -u
+mode=${1:-}
+case "$mode" in
+    performance) title='Orange Pi Performance Mode'; detail='Stock CPU/GPU performance governors enabled.\nThis may increase idle heat. Thermal protection remains active.' ;;
+    balanced) title='Orange Pi Balanced Mode'; detail='Adaptive CPU/GPU governors enabled.\nClocks can still rise under load; idle heat should be lower.' ;;
+    *) zenity --error --text='Choose performance or balanced mode.'; exit 2 ;;
+esac
+if result=$(pkexec /usr/local/sbin/orangepi-performance "$mode" 2>&1); then
+    zenity --info --title="$title" --width=480 --text="$detail"
+else
+    code=$?
+    test "$code" = 126 && exit 0
+    zenity --error --title="$title" --width=560 --text="The profile could not be applied.\n$result"
+    exit "$code"
+fi
