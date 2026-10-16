@@ -77,8 +77,10 @@ has been positively identified.
 
 The image is intended to generate fresh machine identity/SSH host keys and expand
 the root partition on first boot. These behaviours still require fresh-image
-qualification. The planned convenience login is `oem` / `orangepi`, with root
-password login disabled. **Change the default password immediately** and never
+qualification. The candidate's convenience login is `oem` / `orangepi`, with root
+password login disabled. Its password was checked in the candidate filesystem.
+Use `sudo` with the same password for administrator commands.
+**Change the default password immediately** using `passwd` and never
 expose default-password SSH to the Internet. Find the new address in your router's
 DHCP list; do not assume the development board's address.
 

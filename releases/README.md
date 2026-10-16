@@ -6,6 +6,18 @@ The development board has verified GPU rendering, native video decode, 5-GHz
 Wi-Fi, Bluetooth pairing/A2DP and NPU inference. The historical October 13 image
 does not include subsequent fixes and is not a current release candidate.
 
+## October 17 private candidate
+
+A new 12-GiB regular-file image has been built without overwriting the running
+eMMC. Its offline ext4/FAT checks, compressed-stream check, default-password
+check and partition/boot-reference checks passed. User profiles and identities
+were excluded, and the initramfs was sanitized separately. The running system's
+protected boot-file checksums remained unchanged.
+
+This is **not a public download or fresh-device boot qualification**. The
+remaining publication requirements below still apply, especially exact firmware
+redistribution terms, corresponding source and modified-Ubuntu branding review.
+
 ## Required before a public image download
 
 - Build a fresh regular-file disk image; never publish a raw dump of the live
