@@ -65,13 +65,28 @@ inner `.img.gz` (or decompressed `.img`), **not our packaging ISO**.
    Never select your Windows/system disk, and never flash a mounted running root.
 6. Let validation finish, safely eject, refit the eMMC with power disconnected,
    remove the recovery SD and start the Pi. Use Ethernet for initial recovery access.
-7. Use the credentials stated in the release notes; the planned default is
-   `oem` / `orangepi`. Change the password immediately with `passwd`.
+7. Log in with `oem` / `orangepi`. Change the password immediately with `passwd`.
 
 If the eMMC cannot be connected to a PC, use a separately booted recovery Linux
 environment and positively identify/unmount the eMMC target first. Etcher on your
 PC cannot see the Pi's internal eMMC merely because Ethernet is connected.
 See [the complete installation guide](docs/INSTALLATION.md).
+
+### Default login
+
+| Setting | Image default |
+|---|---|
+| Username | `oem` |
+| Password | `orangepi` |
+| Administrator commands | Use `sudo` with the `oem` password |
+| Root password login | Disabled |
+
+These credentials were checked in the October 17 image candidate; a fresh-device
+boot test is still outstanding. Change the password immediately with `passwd`.
+For SSH, use `ssh oem@<PI-IP-ADDRESS>` with the address assigned by your router;
+there is no fixed IP. Keep the default-password device on a trusted local network
+and do not forward its SSH port to the Internet. Personal Wi-Fi passwords and
+Bluetooth pairings are not supplied in the image.
 
 ## Does it support SSDs?
 
