@@ -1,0 +1,19 @@
+#!/bin/bash
+set -euo pipefail
+test "$(id -u)" = 0 || { echo 'Run with administrator privileges.' >&2; exit 1; }
+mode=${1:-performance}
+case "$mode" in
+    performance) cpu=performance; gpu=performance ;;
+    balanced) cpu=ondemand; gpu=simple_ondemand ;;
+    *) echo 'Usage: orangepi-performance performance|balanced' >&2; exit 2 ;;
+esac
+grep -q 'xunlong,orangepi-5-max' /sys/firmware/devicetree/base/compatible
+for policy in /sys/devices/system/cpu/cpufreq/policy*; do
+    grep -qw "$cpu" "$policy/scaling_available_governors"
+    printf '%s\n' "$cpu" > "$policy/scaling_governor"
+done
+device=/sys/class/devfreq/fb000000.gpu
+grep -qw "$gpu" "$device/available_governors"
+printf '%s\n' "$gpu" > "$device/governor"
+printf '%s\n' "$mode" > /etc/orangepi-performance-mode
+printf 'Orange Pi profile: %s. Stock clock limits and thermal controls are unchanged.\n' "$mode"

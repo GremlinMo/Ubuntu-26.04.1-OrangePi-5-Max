@@ -1,0 +1,11 @@
+[Unit]
+Description=Orange Pi 5 Max stock performance profile
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c '/usr/local/sbin/orangepi-performance "$(cat /etc/orangepi-performance-mode)"'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=graphical.target
